@@ -55,6 +55,7 @@ void setup() {
 }
 
 void loop() {
+  sensors sensor = {0, 0, 0, 0, 0};
   //Update sensors like they should be
   updateAllSensors();
   //Evaluate and decide on a behavior
