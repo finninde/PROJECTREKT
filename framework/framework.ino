@@ -3,6 +3,7 @@
 #include <ZumoBuzzer.h>
 #include <ZumoMotors.h>
 #include <ZumoReflectanceSensorArray.h>
+#include <Servo.h>
 
 // Macros for ultra sound
 #define triggerPin 1
@@ -11,7 +12,7 @@
 #define aggressive 1
 #define defensive 2
 #define search 3
-#include <Servo.h>
+
 // See arduino servo example for using servo
 Servo USServo;
 //Sensor struct, contains all sensory input
