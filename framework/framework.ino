@@ -42,6 +42,7 @@ void setup() {
 void loop() {
   //Update sensors like they should be
   //martin is a duck
+  // finn is a d**k
   updateAllSensors();
   //Evaluate and decide on a behavior
   behavior = evaluate();
