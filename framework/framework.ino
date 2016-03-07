@@ -80,6 +80,7 @@ void setup() {
   USServo.attach(servoPin);
   pinMode(triggerPin, OUTPUT);
   pinMode(echoPin, INPUT);
+  Serial.begin(9600);
 }
 
 void loop() {
@@ -88,7 +89,6 @@ void loop() {
   Serial.print("====== WE COOOL ======:");
   Serial.println(cool);
 
-  /*
   sensors sensor = {0, 0, 0, 0, 0};
   //Update sensors like they should be
   updateAllSensors();
@@ -105,5 +105,5 @@ void loop() {
       // behavior ran and should not be run again
       
     }  
-  */
+  
 }
