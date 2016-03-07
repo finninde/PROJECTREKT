@@ -8,6 +8,7 @@
 // Macros for ultra sound
 #define triggerPin 1
 #define echoPin 2
+#define servoPin 3
 
 #define aggressive 1
 #define defensive 2
@@ -22,14 +23,14 @@ struct sensors{
   float GyroX;
   float GyroY;
   float GyroZ;
-  }
+  };
 
 //behavior struct, add points towards a behavior
 struct behaviors{
   int Agressive;
   int Defensive;
   int Search;
-  }
+  };
 
 void updateAllSensors(){
   //Updates all sensors in sensors struct
@@ -41,21 +42,53 @@ int evaluate(){
   
   }
 
-int runBehavior(behavior, runtime){
+int runBehavior(int behavior, float runtime){
   // Runs a behavior for a runtime
   // Returns 1 if successfull and 0 if interrupted
   return 1;
   }
 
+int findStuff (){
+  bool found = false;
+  int angle = 0;
+  long duration;
+  float distance;
+  while(!found  || angle==180){
+    USServo.write(angle);
+    digitalWrite(triggerPin, LOW);
+    delayMicroseconds(2);
+    digitalWrite(triggerPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(triggerPin, LOW);
+    duration = pulseIn(echoPin, HIGH);
+    distance = duration * 0.00017;
+    Serial.print("Distance:");
+    Serial.println(distance);
+    if (distance < 0.1){
+      found = true;
+      return angle;}
+    angle += 2;
+    Serial.print("Angle:");
+    Serial.println(angle);
+  }
+  return -1;
+}
+
 void setup() {
   //TODO: initialize sensors by running update
   updateAllSensors();
-  USServo.attach(6);
+  USServo.attach(servoPin);
   pinMode(triggerPin, OUTPUT);
   pinMode(echoPin, INPUT);
 }
 
 void loop() {
+
+  int cool = findStuff();
+  Serial.print("====== WE COOOL ======:");
+  Serial.println(cool);
+
+  /*
   sensors sensor = {0, 0, 0, 0, 0};
   //Update sensors like they should be
   updateAllSensors();
@@ -66,11 +99,11 @@ void loop() {
   // run the behavior
   if (runBehavior(behavior, runtime)){
       // behavior ran and terminated
-      
+
     }
   else{
       // behavior ran and should not be run again
       
     }  
-
+  */
 }
