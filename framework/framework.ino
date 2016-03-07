@@ -1,3 +1,13 @@
+#include <PLab_ZumoMotors.h>
+#include <QTRSensors.h>
+#include <ZumoBuzzer.h>
+#include <ZumoMotors.h>
+#include <ZumoReflectanceSensorArray.h>
+
+// Macros for ultra sound
+#define triggerPin 1
+#define echoPin 2
+
 #define aggressive 1
 #define defensive 2
 #define search 3
@@ -40,11 +50,12 @@ void setup() {
   //TODO: initialize sensors by running update
   updateAllSensors();
   USServo.attach(6);
+  pinMode(triggerPin, OUTPUT);
+  pinMode(echoPin, INPUT);
 }
 
 void loop() {
   //Update sensors like they should be
-  // finn is a d**k
   updateAllSensors();
   //Evaluate and decide on a behavior
   behavior = evaluate();
