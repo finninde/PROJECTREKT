@@ -1,6 +1,9 @@
 #define aggressive 1
 #define defensive 2
 #define search 3
+#include <Servo.h>
+// See arduino servo example for using servo
+Servo USServo;
 //Sensor struct, contains all sensory input
 struct sensors{
   float UVLeft;
@@ -36,12 +39,11 @@ int runBehavior(behavior, runtime){
 void setup() {
   //TODO: initialize sensors by running update
   updateAllSensors();
-  
+  USServo.attach(6);
 }
 
 void loop() {
   //Update sensors like they should be
-  //martin is a duck
   // finn is a d**k
   updateAllSensors();
   //Evaluate and decide on a behavior
