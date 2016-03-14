@@ -7,9 +7,18 @@
  http://www.arduino.cc/en/Tutorial/Sweep
 */
 
+#include <PLab_ZumoMotors.h>
+#include <QTRSensors.h>
+#include <ZumoBuzzer.h>
+#include <ZumoMotors.h>
+#include <ZumoReflectanceSensorArray.h>
+#include <Servo.h>
+
 #include <Servo.h>
 const int triggerPin = 1;
 const int echoPin = 2;
+
+PLab_ZumoMotors motors;
 
 Servo USServo;  // create servo object to control a servo
 // twelve servo objects can be created on most boards
@@ -65,10 +74,41 @@ int findStuff (){
   return 666;
 }
 
+void attack()
+{
+ /*
+  while (true)
+  {
+    int angle = findStuff();
+    
+    if (abs(angle) < 5)
+    {
+      motors.forward(100, 10);
+    }
+    else
+    {
+      
+      if (angle < 0)
+      {
+        motors.turnRight(100, -angle);
+      }
+      else
+      {
+        motors.turnLeft(100, angle);
+      }
+      
+    }
+  }
+  */
+
+  runForwardUntilEdge(1000);
+  
+}
+
 void loop() {
   int cool = findStuff();
   Serial.print("====== WE COOOL ======:");
   Serial.println(cool);
-  
+  attack();
 }
 

@@ -1,17 +1,18 @@
 #include <PLab_ZumoMotors.h>
 #include <QTRSensors.h>
 #include <ZumoBuzzer.h>
-#include <ZumoMotors.h>
+//#include <ZumoMotors.h>
 #include <Pushbutton.h>
 #include <ZumoReflectanceSensorArray.h>
-#include <Servo.h>
+//#include <Servo.h>
+#include <SoftwareServo.h>
 
 #define LED 13
 
 // Macros for ultra sound
 #define triggerPin 1
 #define echoPin 2
-#define servoPin 3
+#define servoPin 6
 
 // this might need to be tuned for different lighting conditions, surfaces, etc.
 #define QTR_THRESHOLD  1800 // 
@@ -23,7 +24,7 @@
 #define REVERSE_DURATION  200 // ms
 #define TURN_DURATION     300 // ms
 
-ZumoMotors motors;
+PLab_ZumoMotors motors;
 Pushbutton button(ZUMO_BUTTON); // pushbutton on pin 12
 
 #define NUM_SENSORS 6
@@ -36,9 +37,9 @@ ZumoReflectanceSensorArray sensors;
 #define search 3
 
 // See arduino servo example for using servo
-Servo USServo;
+SoftwareServo USServo;
 //Sensor struct, contains all sensory input
-struct sensors{
+struct Sensors{
   float UVLeft;
   float UVRight;
   float GyroX;
@@ -143,8 +144,8 @@ int findStuff (){
       found = true;
       return (angle - 90);}
     angle += 2;
-    Serial.print("Angle:");
-    Serial.println(angle);
+    //Serial.print("Angle:");
+    //Serial.println(angle);
   }
   return 666;
 }
@@ -162,16 +163,22 @@ void setup() {
 void loop() {
 
   int cool = findStuff();
-  Serial.print("====== WE COOOL ======:");
-  Serial.println(cool);
+  //Serial.print("====== WE COOOL ======:");
+  //Serial.println(cool);
 
-  sensors sensor = {0, 0, 0, 0, 0};
+  Sensors sensor;
+  sensor.UVLeft = 0;
+  sensor.UVRight = 0;
+  sensor.GyroX = 0;
+  sensor.GyroY = 0;
+  sensor.GyroZ = 0;
+  
   //Update sensors like they should be
   updateAllSensors();
   //Evaluate and decide on a behavior
-  behavior = evaluate();
+  int behavior = evaluate();
   // set a runtime for selected behavior
-  runtime = random(0,2);
+  int runtime = random(0,2);
   // run the behavior
   if (runBehavior(behavior, runtime)){
       // behavior ran and terminated
@@ -181,5 +188,36 @@ void loop() {
       // behavior ran and should not be run again
       
     }  
-  
+  attack();
 }
+
+void attack()
+{
+ /*
+  while (true)
+  {
+    int angle = findStuff();
+    
+    if (abs(angle) < 5)
+    {
+      motors.forward(100, 10);
+    }
+    else
+    {
+      
+      if (angle < 0)
+      {
+        motors.turnRight(100, -angle);
+      }
+      else
+      {
+        motors.turnLeft(100, angle);
+      }
+      
+    }
+  }
+  */
+  motors.setSpeeds(FORWARD_SPEED, FORWARD_SPEED);
+  SoftwareServo::refresh();
+}
+
