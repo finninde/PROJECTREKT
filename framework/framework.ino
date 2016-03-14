@@ -37,7 +37,8 @@ float readUSSensor(int len){
   float arraySum = 0;
   float average;
   long duration;
-  for (i=0; i<len ; i++){
+  float distance;
+  for (int i=0; i<len ; i++){
     digitalWrite(triggerPin, LOW);
     delayMicroseconds(2);
     digitalWrite(triggerPin, HIGH);
@@ -48,8 +49,8 @@ float readUSSensor(int len){
     measurements[i] = distance;
     }
 
-   for (i=0; i<len; i++){
-      arraySum += mesurements[i] 
+   for (int i=0; i<len; i++){
+      arraySum += measurements[i];
     }
   average = arraySum/len;
   return average;
@@ -77,17 +78,16 @@ int findStuff (){
   float distance;
   while(!found  || angle==180){
     USServo.write(angle);
-    distance = readUSSensor(5);
+    distance = readUSSensor(2);
     if (distance < 0.1){
       found = true;
-      return angle;}
+      return (angle - 90);}
     angle += 2;
     Serial.print("Angle:");
     Serial.println(angle);
   }
-  return -1;
+  return 666;
 }
-
 void setup() {
   //TODO: initialize sensors by running update
   updateAllSensors();
