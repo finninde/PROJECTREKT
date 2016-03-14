@@ -2,13 +2,34 @@
 #include <QTRSensors.h>
 #include <ZumoBuzzer.h>
 #include <ZumoMotors.h>
+#include <Pushbutton.h>
 #include <ZumoReflectanceSensorArray.h>
 #include <Servo.h>
+
+#define LED 13
 
 // Macros for ultra sound
 #define triggerPin 1
 #define echoPin 2
 #define servoPin 3
+
+// this might need to be tuned for different lighting conditions, surfaces, etc.
+#define QTR_THRESHOLD  1800 // 
+  
+// these might need to be tuned for different motor types
+#define REVERSE_SPEED     200 // 0 is stopped, 400 is full speed
+#define TURN_SPEED        200
+#define FORWARD_SPEED     100
+#define REVERSE_DURATION  200 // ms
+#define TURN_DURATION     300 // ms
+
+ZumoMotors motors;
+Pushbutton button(ZUMO_BUTTON); // pushbutton on pin 12
+
+#define NUM_SENSORS 6
+unsigned int sensor_values[NUM_SENSORS];
+ 
+ZumoReflectanceSensorArray sensors;
 
 #define aggressive 1
 #define defensive 2
@@ -56,6 +77,45 @@ float readUSSensor(int len){
   return average;
   }
 
+int runForwardUntilEdge(int timeMillis){
+  /* Give function time in millis you want the zumobot to run forward
+   * Function runs until complete unless one of the following:
+   * -1 something is to the left, i turned right
+   * -2 something is to the right, i turned left
+   */
+  unsigned long startTime = millis();
+  unsigned long endTime = startTime + timeMillis;
+  while (startTime < endTime){
+  if (sensor_values[0] > QTR_THRESHOLD){
+    // if edge is left of me
+    // GET ME AWAYYY
+    motors.setSpeeds(-REVERSE_SPEED, -REVERSE_SPEED);
+    delay(REVERSE_DURATION);
+    motors.setSpeeds(TURN_SPEED, -TURN_SPEED);
+    delay(TURN_DURATION);
+    motors.setSpeeds(FORWARD_SPEED, FORWARD_SPEED);
+    // return result
+    return -1;
+    }
+  else if (sensor_values[5] > QTR_THRESHOLD){
+    // if edge is right of me
+    // GET ME AWAYY
+     motors.setSpeeds(-REVERSE_SPEED, -REVERSE_SPEED);
+    delay(REVERSE_DURATION);
+    motors.setSpeeds(-TURN_SPEED, TURN_SPEED);
+    delay(TURN_DURATION);
+    motors.setSpeeds(FORWARD_SPEED, FORWARD_SPEED);
+    // return result
+    return -2; 
+    }
+  else {
+    // Run forward
+    motors.setSpeeds(FORWARD_SPEED, FORWARD_SPEED);
+    }
+  }
+  return 1;
+  }
+
 void updateAllSensors(){
   //Updates all sensors in sensors struct
   }
@@ -90,6 +150,8 @@ int findStuff (){
 }
 void setup() {
   //TODO: initialize sensors by running update
+  sensors.init();
+  button.waitForButton();
   updateAllSensors();
   USServo.attach(servoPin);
   pinMode(triggerPin, OUTPUT);
