@@ -32,6 +32,29 @@ struct behaviors{
   int Search;
   };
 
+float readUSSensor(int len){
+  float measurements[len];
+  float arraySum = 0;
+  float average;
+  long duration;
+  for (i=0; i<len ; i++){
+    digitalWrite(triggerPin, LOW);
+    delayMicroseconds(2);
+    digitalWrite(triggerPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(triggerPin, LOW);
+    duration = pulseIn(echoPin, HIGH);
+    distance = duration * 0.00017;
+    measurements[i] = distance;
+    }
+
+   for (i=0; i<len; i++){
+      arraySum += mesurements[i] 
+    }
+  average = arraySum/len;
+  return average;
+  }
+
 void updateAllSensors(){
   //Updates all sensors in sensors struct
   }
@@ -51,19 +74,10 @@ int runBehavior(int behavior, float runtime){
 int findStuff (){
   bool found = false;
   int angle = 0;
-  long duration;
   float distance;
   while(!found  || angle==180){
     USServo.write(angle);
-    digitalWrite(triggerPin, LOW);
-    delayMicroseconds(2);
-    digitalWrite(triggerPin, HIGH);
-    delayMicroseconds(10);
-    digitalWrite(triggerPin, LOW);
-    duration = pulseIn(echoPin, HIGH);
-    distance = duration * 0.00017;
-    Serial.print("Distance:");
-    Serial.println(distance);
+    distance = readUSSensor(5);
     if (distance < 0.1){
       found = true;
       return angle;}
