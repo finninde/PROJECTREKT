@@ -1,15 +1,13 @@
 #include <PLab_ZumoMotors.h>
 #include <QTRSensors.h>
 #include <ZumoBuzzer.h>
-//#include <ZumoMotors.h>
 #include <Pushbutton.h>
 #include <ZumoReflectanceSensorArray.h>
-//#include <Servo.h>
 #include <SoftwareServo.h>
 
 #define LED 13
 
-// Macros for ultra sound
+// Ultra sound
 #define triggerPin 1
 #define echoPin 2
 #define servoPin 6
@@ -24,6 +22,7 @@
 #define REVERSE_DURATION  200 // ms
 #define TURN_DURATION     300 // ms
 
+// Zumo motor
 PLab_ZumoMotors motors;
 Pushbutton button(ZUMO_BUTTON); // pushbutton on pin 12
 
@@ -38,6 +37,7 @@ ZumoReflectanceSensorArray sensors;
 
 // See arduino servo example for using servo
 SoftwareServo USServo;
+
 //Sensor struct, contains all sensory input
 struct Sensors{
   float UVLeft;
@@ -149,6 +149,7 @@ int findStuff (){
   }
   return 666;
 }
+
 void setup() {
   //TODO: initialize sensors by running update
   sensors.init();
@@ -191,33 +192,25 @@ void loop() {
   attack();
 }
 
-void attack()
-{
+void attack() {
  /*
-  while (true)
-  {
+  while (true) {
     int angle = findStuff();
     
-    if (abs(angle) < 5)
-    {
+    if (abs(angle) < 5) {
       motors.forward(100, 10);
     }
-    else
-    {
-      
-      if (angle < 0)
-      {
+    else {
+      if (angle < 0) {
         motors.turnRight(100, -angle);
       }
-      else
-      {
+      else {
         motors.turnLeft(100, angle);
-      }
-      
+      } 
     }
   }
   */
   motors.setSpeeds(FORWARD_SPEED, FORWARD_SPEED);
-  SoftwareServo::refresh();
+  SoftwareServo::refresh(); // must refresh servo when using this library
 }
 
