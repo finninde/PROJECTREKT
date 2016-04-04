@@ -167,6 +167,10 @@ void loop() {
   //Serial.print("====== WE COOOL ======:");
   //Serial.println(cool);
 
+  SoftwareServo::refresh(); // must refresh servo when using this library
+  runForwardUntilEdge(10);
+
+  
   Sensors sensor;
   sensor.UVLeft = 0;
   sensor.UVRight = 0;
@@ -188,11 +192,13 @@ void loop() {
   else{
       // behavior ran and should not be run again
       
-    }  
-  attack();
+    }
+  //attack();
+  //findStuff();
 }
 
 void attack() {
+  findStuff();
  /*
   while (true) {
     int angle = findStuff();
@@ -208,9 +214,11 @@ void attack() {
         motors.turnLeft(100, angle);
       } 
     }
-  }
-  */
-  motors.setSpeeds(FORWARD_SPEED, FORWARD_SPEED);
-  SoftwareServo::refresh(); // must refresh servo when using this library
+  }*/
+
+  //runForwardUntilEdge(100);
+  
+  //motors.setSpeeds(FORWARD_SPEED, FORWARD_SPEED);
+  
 }
 
